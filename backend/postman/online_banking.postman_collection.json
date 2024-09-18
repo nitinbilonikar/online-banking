@@ -1,0 +1,233 @@
+{
+	"info": {
+		"_postman_id": "278de4da-ca86-4e69-8ff4-7045fcb14178",
+		"name": "online_banking",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38282427"
+	},
+	"item": [
+		{
+			"name": "Account Details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzI2NTc3MjYyLCJleHAiOjE3MjY1ODA4NjJ9.hTH5uPiVeNWpC5iu7U9u1yieAg0iZPIkC1D7OCWo_Ew",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3000/accounts/details",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"accounts",
+						"details"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Beneficiaries",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzI2NTc3MjYyLCJleHAiOjE3MjY1ODA4NjJ9.hTH5uPiVeNWpC5iu7U9u1yieAg0iZPIkC1D7OCWo_Ew",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n    \"beneficiary_name\":\"SachinAccount\",\r\n    \"beneficiary_account\":12345678 \r\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/beneficiaries/add",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"beneficiaries",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transaction Pay",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzI2NzAyMDQ4LCJleHAiOjE3MjY3MDU2NDh9.iTzhQRv7tFrWHn26LhyzCfYCEKX5NUxbqipc80lQBKc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n    \"accountId\": 1,\r\n    \"recipient_account\": 12345678,\r\n    \"amount\":50,\r\n    \"userId\":1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/transactions/pay",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"transactions",
+						"pay"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transaction History",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzI2NTg1Nzg2LCJleHAiOjE3MjY1ODkzODZ9.bRD0oBpi6syleYUx2I4aJ8d80NjyUupj63NJ87AMOL8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n    \"accountId\":1\r\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/transactions/history",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"transactions",
+						"history"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Beneficiaries List",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzI2NTc3MjYyLCJleHAiOjE3MjY1ODA4NjJ9.hTH5uPiVeNWpC5iu7U9u1yieAg0iZPIkC1D7OCWo_Ew",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/beneficiaries/list",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"beneficiaries",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n    \"username\":\"nitin@gmail.com\",\r\n    \"password\":\"Test1234\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/auth/register",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n    \"username\":\"nitin@gmail.com\",\r\n    \"password\":\"Test1234\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

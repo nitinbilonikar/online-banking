@@ -46,9 +46,17 @@ router.post('/pay', authenticate, async (req, res) => {
         values = [amount, recipient_account];
         await client.query(query, values);
         
+        query = 'SELECT id from accounts WHERE user_id = $1';
+        values = [userId];
+        const accountRows = await client.query(query, values);
+        
+        const date = new Date();
+        const formattedDate = date.toISOString().split('.')[0]; // Remove milliseconds
+
+        const accountId = accountRows.rows[0].id;
         // Record the transaction
         query = 'INSERT INTO transactions (account_id, amount, type, timestamp) VALUES ($1, $2, $3, $4)';
-        values = [userId, recipient_account, amount, 'payment'];
+        values = [accountId, amount, 'payment',formattedDate];
         await client.query(query, values);
 
         client.release();
@@ -66,7 +74,7 @@ router.post('/pay', authenticate, async (req, res) => {
   const data = {
         isSuccessful: true,
         message: 'Payment is successful',            
-        details: JSON.stringify(transactionsResult.rows)
+        details: 'completed'
     }
     res.status(201).send(data);
 });
