@@ -1,35 +1,74 @@
 const express = require('express');
-const verifyToken = require('../middleware/auth');
-const { createTransaction, getTransactionsByAccountId } = require('../models/transactionModel');
-const { getAccountByUserId, updateAccountBalance } = require('../models/accountModel');
-
 const router = express.Router();
+const pool = require('../db/pool');
+const authenticate = require('../middleware/auth');
 
-router.post('/payment', verifyToken, async (req, res) => {
-    const { amount } = req.body;
-
-    try {
-        const account = await getAccountByUserId(req.user.id);
-        if (account.balance < amount) return res.status(400).send('Insufficient balance');
-
-        const newBalance = account.balance - amount;
-        await updateAccountBalance(account.id, newBalance);
-        const transaction = await createTransaction(account.id, amount, 'payment');
-
-        res.json(transaction);
-    } catch (err) {
-        res.status(500).send('Error making payment');
+// Fetch user transactions
+router.get('/history', authenticate, async (req, res) => {
+  const query = 'SELECT * FROM transactions WHERE account_id = $1';
+  const values = [req.accountId];
+  let transactionsResult;
+  try {
+        const client = await pool.connect();
+        transactionsResult = await client.query(query, values);
+        client.release();
+    } catch (error) {
+        console.error("An error occurred:", error.message);
+        const data = {
+            isSuccessful: false,
+            message: 'Failed to fetch transactions',            
+            details: error.message
+        }
+        res.status(500).send(data);
+        return;
     }
+    const data = {
+        isSuccessful: true,
+        message: 'Successfully fetched transaction history',            
+        details: JSON.stringify(transactionsResult.rows)
+    }
+    res.status(200).send(data);
 });
 
-router.get('/history', verifyToken, async (req, res) => {
-    try {
-        const account = await getAccountByUserId(req.user.id);
-        const transactions = await getTransactionsByAccountId(account.id);
-        res.json(transactions);
-    } catch (err) {
-        res.status(500).send('Error fetching transaction history');
+// Make a payment
+router.post('/pay', authenticate, async (req, res) => {
+  const { recipient_account, amount } = req.body;
+  const userId = req.user.id;
+
+  // Deduct amount from sender's account
+  let query = 'UPDATE accounts SET balance = balance - $1 WHERE user_id = $2';
+  let values = [amount, userId];
+  try {
+        const client = await pool.connect();
+        await client.query(query, values);
+        // Add amount to recipient's account
+        query = 'UPDATE accounts SET balance = balance + $1 WHERE id = $2';
+        values = [amount, recipient_account];
+        await client.query(query, values);
+        
+        // Record the transaction
+        query = 'INSERT INTO transactions (account_id, amount, type, timestamp) VALUES ($1, $2, $3, $4)';
+        values = [userId, recipient_account, amount, 'payment'];
+        await client.query(query, values);
+
+        client.release();
+
+    } catch (error) {
+        console.error("An error occurred:", error.message);
+        const data = {
+            isSuccessful: false,
+            message: 'Failed to make payment',            
+            details: error.message
+        }
+        res.status(500).send(data);
+        return;
     }
+  const data = {
+        isSuccessful: true,
+        message: 'Payment is successful',            
+        details: JSON.stringify(transactionsResult.rows)
+    }
+    res.status(201).send(data);
 });
 
 module.exports = router;
